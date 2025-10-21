@@ -184,3 +184,159 @@ body {
 #needs-panel::-webkit-scrollbar-thumb:hover {
   background: #5568d3;
 }
+
+/* Mobile Controls */
+#joystick-base {
+  position: fixed;
+  bottom: 40px;
+  left: 40px;
+  width: 120px;
+  height: 120px;
+  background: rgba(255, 255, 255, 0.3);
+  border: 3px solid rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  z-index: 1000;
+  touch-action: none;
+}
+
+#joystick-stick {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
+  background: rgba(103, 126, 234, 0.8);
+  border: 2px solid white;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+#interact-button {
+  position: fixed;
+  bottom: 60px;
+  right: 40px;
+  width: 70px;
+  height: 70px;
+  background: rgba(103, 126, 234, 0.9);
+  border: 3px solid white;
+  border-radius: 50%;
+  color: white;
+  font-size: 1.8rem;
+  font-weight: bold;
+  z-index: 1000;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  touch-action: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#interact-button:active {
+  background: rgba(103, 126, 234, 1);
+  transform: scale(0.95);
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+  #title h1 {
+    font-size: 1.8rem;
+  }
+
+  #title p {
+    font-size: 0.85rem;
+  }
+
+  #needs-panel {
+    top: 80px;
+    right: 10px;
+    width: calc(100vw - 20px);
+    max-width: 280px;
+    max-height: 40vh;
+    padding: 15px;
+  }
+
+  #needs-panel h2 {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+  }
+
+  .need-item {
+    margin-bottom: 8px;
+  }
+
+  .need-name {
+    font-size: 0.8rem;
+  }
+
+  .need-value {
+    font-size: 0.75rem;
+  }
+
+  #controls-info {
+    display: none; /* Hide keyboard controls on mobile */
+  }
+
+  #interaction-prompt {
+    bottom: 160px;
+    font-size: 0.9rem;
+    padding: 10px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  #title h1 {
+    font-size: 1.4rem;
+  }
+
+  #title p {
+    font-size: 0.75rem;
+  }
+
+  #needs-panel {
+    top: 70px;
+    max-width: 240px;
+    padding: 12px;
+  }
+
+  #joystick-base {
+    width: 100px;
+    height: 100px;
+    bottom: 30px;
+    left: 30px;
+  }
+
+  #joystick-stick {
+    width: 40px;
+    height: 40px;
+  }
+
+  #interact-button {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+    bottom: 50px;
+    right: 30px;
+  }
+}
+
+/* Landscape mode on mobile */
+@media (max-width: 900px) and (orientation: landscape) {
+  #title {
+    top: 10px;
+  }
+
+  #title h1 {
+    font-size: 1.3rem;
+  }
+
+  #title p {
+    display: none;
+  }
+
+  #needs-panel {
+    top: 60px;
+    max-height: 70vh;
+  }
+}
