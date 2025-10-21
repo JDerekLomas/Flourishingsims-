@@ -26,24 +26,73 @@ Click the button above to deploy your own instance instantly!
 
 ## Features
 
-- 3D bungalow house without a roof (top-down view into the interior)
-- Character with movement controls
-- Interactive objects that affect different psychological needs
-- Real-time needs tracking and visualization
-- Needs decay over time, requiring regular interaction
+### World & Environment
+- **4-house neighborhood** with streets, street lamps, and trees
+- **Roofless bungalow houses** for perfect top-down view
+- **Road system** with markings connecting all houses
+- **Day/night cycle** with time progression (1 real second = 1 game minute)
+- Beautiful street decorations and ambient lighting
+
+### Characters & AI
+- **Play as your Sim** with full movement control
+- **3 autonomous NPCs** (Alice, Bob, and Carol) with unique personalities
+- **AI-driven behaviors** - NPCs autonomously satisfy their needs
+- **Social interactions** - Talk to NPCs to build relationships
+- **Need-based AI** - NPCs seek objects when their needs are low
+
+### Social Systems
+- **Relationship tracking** with all NPCs
+- **Relationship levels**: From "Enemies" to "Best Friends"
+- **Social interactions**: Chat, joke, compliment with NPCs
+- **Relationship UI** showing all your friendships
+- Relationships improve through positive interactions
+
+### Needs System
+- **13 psychological needs** for player and all NPCs
+- **Real-time tracking** with visual progress bars
+- **Needs decay** over time requiring regular maintenance
+- **40+ interactive objects** spread across 4 houses
+- Each object affects specific psychological needs
+
+### UI & Controls
+- **Minimizable panels** - Click 📊 or 👥 to collapse/expand
+- **Time display** showing current day and time
+- **Dynamic prompts** for objects and NPCs
+- **Mobile-optimized** with touch controls
+- **Responsive design** for all screen sizes
 
 ## Controls
 
 ### Desktop
-- **Arrow Keys or WASD**: Move character
-- **Mouse Drag**: Rotate camera
+- **Arrow Keys or WASD**: Move your character
+- **Mouse Drag**: Rotate camera around the neighborhood
 - **Mouse Wheel**: Zoom in/out
-- **E**: Interact with nearby objects
+- **E**: Interact with objects or talk to NPCs
+- **Click 📊**: Toggle needs panel
+- **Click 👥**: Toggle relationships panel
 
 ### Mobile
 - **Virtual Joystick** (bottom-left): Move character
 - **Drag right side of screen**: Rotate camera
-- **E Button** (bottom-right): Interact with nearby objects
+- **E Button** (bottom-right): Interact with objects/NPCs
+- **Tap panels**: Toggle needs and relationships
+
+## How to Play
+
+1. **Explore the neighborhood** - Visit all 4 houses
+2. **Meet the neighbors** - Talk to Alice, Bob, and Carol
+3. **Build relationships** - Chat and interact to become friends
+4. **Manage your needs** - Use objects to keep all 13 needs high
+5. **Watch the NPCs** - They autonomously go about their day
+6. **Keep an eye on time** - Days pass as you play
+
+## NPCs
+
+- **Alice** (Red) - Lives in House 2
+- **Bob** (Blue) - Lives in House 3
+- **Carol** (Green) - Lives in House 4
+
+Each NPC has their own needs, daily routines, and will interact with objects and other Sims autonomously!
 
 ## Interactive Objects
 
