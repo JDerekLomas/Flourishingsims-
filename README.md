@@ -2,6 +2,12 @@
 
 A Sims-like game based on the 13 fundamental psychological needs by Pieter Desmet and Steven Fokkinga.
 
+## 🚀 Quick Deploy
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/JDerekLomas/Flourishingsims-)
+
+Click the button above to deploy your own instance instantly!
+
 ## The 13 Fundamental Psychological Needs
 
 1. **Autonomy** - Self-determination and freedom
@@ -28,10 +34,16 @@ A Sims-like game based on the 13 fundamental psychological needs by Pieter Desme
 
 ## Controls
 
+### Desktop
 - **Arrow Keys or WASD**: Move character
 - **Mouse Drag**: Rotate camera
 - **Mouse Wheel**: Zoom in/out
 - **E**: Interact with nearby objects
+
+### Mobile
+- **Virtual Joystick** (bottom-left): Move character
+- **Drag right side of screen**: Rotate camera
+- **E Button** (bottom-right): Interact with nearby objects
 
 ## Interactive Objects
 
