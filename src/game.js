@@ -1,8 +1,10 @@
-import { createHouse } from './house.js';
 import { Character } from './character.js';
-import { createInteractiveObjects } from './objects.js';
+import { NPC } from './npc.js';
+import { World } from './world.js';
 import { NeedsManager } from './needsManager.js';
 import { InputHandler } from './input.js';
+import { TimeSystem } from './timeSystem.js';
+import { RelationshipManager } from './relationshipManager.js';
 
 export class Game {
   constructor(scene, camera, renderer) {
@@ -10,101 +12,237 @@ export class Game {
     this.camera = camera;
     this.renderer = renderer;
 
-    // Create house
-    this.house = createHouse();
-    this.scene.add(this.house);
+    // Create world with multiple houses
+    this.world = new World(scene);
 
-    // Create character
-    this.character = new Character();
-    this.scene.add(this.character.mesh);
+    // Create player character at first house
+    this.player = new Character();
+    this.player.id = 'player';
+    this.player.name = 'You';
+    this.player.mesh.position.copy(this.world.getHousePosition(0));
+    this.scene.add(this.player.mesh);
 
-    // Create interactive objects
-    this.objects = createInteractiveObjects();
-    this.objects.forEach(obj => this.scene.add(obj.mesh));
+    // Create NPCs
+    this.npcs = [];
+    this.createNPCs();
 
-    // Initialize needs manager
+    // Get all interactive objects from the world
+    this.objects = this.world.getAllObjects();
+
+    // Initialize managers
     this.needsManager = new NeedsManager();
+    this.timeSystem = new TimeSystem();
+    this.relationshipManager = new RelationshipManager();
+
+    // Initialize relationship for player
+    this.relationshipManager.initializeCharacter('player');
 
     // Initialize input handler
-    this.inputHandler = new InputHandler(this.character, this.camera);
+    this.inputHandler = new InputHandler(this.player, this.camera);
 
     // Setup interaction system
     this.setupInteractionSystem();
+
+    // Setup UI toggles
+    this.setupUIToggles();
 
     // Track time for needs decay
     this.timeAccumulator = 0;
   }
 
+  createNPCs() {
+    const npcData = [
+      { name: 'Alice', house: 1, color: 0xe74c3c },
+      { name: 'Bob', house: 2, color: 0x3498db },
+      { name: 'Carol', house: 3, color: 0x2ecc71 }
+    ];
+
+    npcData.forEach(data => {
+      const npc = new NPC(
+        data.name,
+        this.world.getHousePosition(data.house),
+        data.color
+      );
+      this.npcs.push(npc);
+      this.scene.add(npc.mesh);
+
+      // Initialize relationship for this NPC
+      this.relationshipManager.initializeCharacter(npc.id);
+    });
+  }
+
+  setupUIToggles() {
+    const toggleNeeds = document.getElementById('toggle-needs');
+    const needsPanel = document.getElementById('needs-panel');
+
+    const toggleRelationships = document.getElementById('toggle-relationships');
+    const relationshipsPanel = document.getElementById('relationships-panel');
+
+    toggleNeeds.addEventListener('click', () => {
+      needsPanel.classList.toggle('minimized');
+    });
+
+    toggleRelationships.addEventListener('click', () => {
+      relationshipsPanel.classList.toggle('minimized');
+    });
+  }
+
   setupInteractionSystem() {
     const interactionPrompt = document.getElementById('interaction-prompt');
 
-    // Check for nearby objects
-    this.checkNearbyObjects = () => {
-      const characterPos = this.character.mesh.position;
+    // Check for nearby objects and NPCs
+    this.checkNearbyInteractables = () => {
+      const playerPos = this.player.mesh.position;
       let nearbyObject = null;
-      let minDistance = Infinity;
+      let nearbyNPC = null;
+      let minObjectDist = Infinity;
+      let minNPCDist = Infinity;
 
+      // Check objects
       this.objects.forEach(obj => {
-        const distance = characterPos.distanceTo(obj.mesh.position);
-        if (distance < 2.5 && distance < minDistance) {
-          minDistance = distance;
+        const distance = playerPos.distanceTo(obj.mesh.position);
+        if (distance < 2.5 && distance < minObjectDist) {
+          minObjectDist = distance;
           nearbyObject = obj;
         }
       });
 
-      if (nearbyObject) {
+      // Check NPCs
+      this.npcs.forEach(npc => {
+        const distance = playerPos.distanceTo(npc.mesh.position);
+        if (distance < 3 && distance < minNPCDist) {
+          minNPCDist = distance;
+          nearbyNPC = npc;
+        }
+      });
+
+      // Priority: NPCs over objects
+      if (nearbyNPC) {
         interactionPrompt.style.display = 'block';
-        this.currentInteractableObject = nearbyObject;
+        interactionPrompt.textContent = `Press E to talk to ${nearbyNPC.name}`;
+        this.currentInteractable = nearbyNPC;
+        this.currentInteractableType = 'npc';
+      } else if (nearbyObject) {
+        interactionPrompt.style.display = 'block';
+        interactionPrompt.textContent = `Press E to use ${nearbyObject.name}`;
+        this.currentInteractable = nearbyObject;
+        this.currentInteractableType = 'object';
       } else {
         interactionPrompt.style.display = 'none';
-        this.currentInteractableObject = null;
+        this.currentInteractable = null;
+        this.currentInteractableType = null;
       }
     };
 
     // Handle interaction key (E)
     window.addEventListener('keydown', (e) => {
       if (e.key === 'e' || e.key === 'E') {
-        if (this.currentInteractableObject) {
-          this.interact(this.currentInteractableObject);
+        if (this.currentInteractable) {
+          if (this.currentInteractableType === 'object') {
+            this.interactWithObject(this.currentInteractable);
+          } else if (this.currentInteractableType === 'npc') {
+            this.interactWithNPC(this.currentInteractable);
+          }
         }
       }
     });
   }
 
-  interact(object) {
-    console.log(`Interacting with ${object.name}`);
+  interactWithObject(object) {
+    console.log(`Using ${object.name}`);
 
-    // Apply needs changes based on object type
+    // Apply needs changes
     const needsChanges = object.needsEffect;
     Object.keys(needsChanges).forEach(needName => {
       this.needsManager.modifyNeed(needName, needsChanges[needName]);
     });
 
     // Visual feedback
-    this.showInteractionFeedback(object);
+    this.showInteractionFeedback(object.mesh);
   }
 
-  showInteractionFeedback(object) {
-    // Simple color flash
-    const originalColor = object.mesh.material.color.clone();
-    object.mesh.material.color.setHex(0xffff00);
+  interactWithNPC(npc) {
+    console.log(`Talking to ${npc.name}`);
+
+    // Random interaction types
+    const interactions = ['chat', 'joke', 'compliment'];
+    const interactionType = interactions[Math.floor(Math.random() * interactions.length)];
+
+    // Update relationship
+    this.relationshipManager.interact(
+      'player',
+      npc.id,
+      'You',
+      npc.name,
+      interactionType
+    );
+
+    // Update player needs
+    this.needsManager.modifyNeed('community', 8);
+    this.needsManager.modifyNeed('relatedness', 10);
+    this.needsManager.modifyNeed('stimulation', 5);
+
+    // Update NPC needs
+    npc.satisfyNeeds({
+      community: 8,
+      relatedness: 10,
+      stimulation: 5
+    });
+
+    // Visual feedback
+    this.showInteractionFeedback(npc.mesh);
+
+    // Update relationships UI
+    this.relationshipManager.updateUI('player');
+  }
+
+  showInteractionFeedback(mesh) {
+    // Find a child mesh with a material
+    const findMeshWithMaterial = (obj) => {
+      if (obj.material && obj.material.color) {
+        return obj;
+      }
+      for (let child of obj.children) {
+        const result = findMeshWithMaterial(child);
+        if (result) return result;
+      }
+      return null;
+    };
+
+    const targetMesh = findMeshWithMaterial(mesh);
+    if (!targetMesh) return;
+
+    const originalColor = targetMesh.material.color.clone();
+    targetMesh.material.color.setHex(0xffff00);
 
     setTimeout(() => {
-      object.mesh.material.color.copy(originalColor);
+      targetMesh.material.color.copy(originalColor);
     }, 200);
   }
 
   update(deltaTime) {
-    // Update character movement
+    // Update time system
+    this.timeSystem.update(deltaTime);
+
+    // Update player movement
     this.inputHandler.update(deltaTime);
 
-    // Check for nearby interactive objects
-    this.checkNearbyObjects();
+    // Update NPCs
+    this.npcs.forEach(npc => {
+      npc.update(deltaTime, this.timeSystem.getTimeOfDay(), this.objects, [this.player, ...this.npcs.filter(n => n !== npc)]);
+    });
+
+    // Check for nearby interactables
+    this.checkNearbyInteractables();
 
     // Decay needs over time (every 5 seconds)
     this.timeAccumulator += deltaTime;
     if (this.timeAccumulator >= 5) {
       this.needsManager.decayNeeds();
+
+      // NPCs also decay needs
+      this.npcs.forEach(npc => npc.decayNeeds());
+
       this.timeAccumulator = 0;
     }
 
