@@ -27,27 +27,36 @@ export class World {
     ];
 
     housePositions.forEach((pos, index) => {
-      const house = createHouse();
-      house.position.set(pos.x, 0, pos.z);
+      try {
+        const house = createHouse();
+        house.position.set(pos.x, 0, pos.z);
 
-      // Vary house colors
-      house.traverse((child) => {
-        if (child.isMesh && child.material.color) {
-          child.material.color.setHex(houseColors[index]);
-        }
-      });
+        // Vary house colors
+        house.traverse((child) => {
+          if (child.isMesh && child.material && child.material.color) {
+            try {
+              child.material.color.setHex(houseColors[index]);
+            } catch (e) {
+              console.warn('Could not set house color:', e);
+            }
+          }
+        });
 
-      this.scene.add(house);
-      this.houses.push({ mesh: house, position: new THREE.Vector3(pos.x, 0, pos.z) });
+        this.scene.add(house);
+        this.houses.push({ mesh: house, position: new THREE.Vector3(pos.x, 0, pos.z) });
 
-      // Add objects to each house
-      const objects = createInteractiveObjects();
-      objects.forEach(obj => {
-        obj.mesh.position.x += pos.x;
-        obj.mesh.position.z += pos.z;
-        this.scene.add(obj.mesh);
-        this.allObjects.push(obj);
-      });
+        // Add objects to each house
+        const objects = createInteractiveObjects();
+        objects.forEach(obj => {
+          obj.mesh.position.x += pos.x;
+          obj.mesh.position.z += pos.z;
+          this.scene.add(obj.mesh);
+          this.allObjects.push(obj);
+        });
+      } catch (error) {
+        console.error(`Error creating house ${index}:`, error);
+        throw error;
+      }
     });
 
     // Create road/path

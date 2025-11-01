@@ -8,34 +8,54 @@ import { RelationshipManager } from './relationshipManager.js';
 
 export class Game {
   constructor(scene, camera, renderer) {
-    this.scene = scene;
-    this.camera = camera;
-    this.renderer = renderer;
+    try {
+      this.scene = scene;
+      this.camera = camera;
+      this.renderer = renderer;
 
-    // Create world with multiple houses
-    this.world = new World(scene);
+      console.log('Creating world...');
+      // Create world with multiple houses
+      this.world = new World(scene);
+      console.log('World created successfully');
 
-    // Create player character at first house
-    this.player = new Character();
-    this.player.id = 'player';
-    this.player.name = 'You';
-    this.player.mesh.position.copy(this.world.getHousePosition(0));
-    this.scene.add(this.player.mesh);
+      console.log('Creating player character...');
+      // Create player character at first house
+      this.player = new Character();
+      this.player.id = 'player';
+      this.player.name = 'You';
+      this.player.mesh.position.copy(this.world.getHousePosition(0));
+      this.scene.add(this.player.mesh);
+      console.log('Player created successfully');
 
-    // Create NPCs
-    this.npcs = [];
-    this.createNPCs();
+      console.log('Creating NPCs...');
+      // Create NPCs
+      this.npcs = [];
+      this.createNPCs();
+      console.log('NPCs created successfully');
 
-    // Get all interactive objects from the world
-    this.objects = this.world.getAllObjects();
+      console.log('Getting objects...');
+      // Get all interactive objects from the world
+      this.objects = this.world.getAllObjects();
+      console.log(`Found ${this.objects.length} objects`);
 
-    // Initialize managers
-    this.needsManager = new NeedsManager();
-    this.timeSystem = new TimeSystem();
-    this.relationshipManager = new RelationshipManager();
+      console.log('Initializing managers...');
+      // Initialize managers
+      this.needsManager = new NeedsManager();
+      console.log('NeedsManager initialized');
 
-    // Initialize relationship for player
-    this.relationshipManager.initializeCharacter('player');
+      this.timeSystem = new TimeSystem();
+      console.log('TimeSystem initialized');
+
+      this.relationshipManager = new RelationshipManager();
+      console.log('RelationshipManager initialized');
+
+      // Initialize relationship for player
+      this.relationshipManager.initializeCharacter('player');
+      console.log('Player relationship initialized');
+    } catch (error) {
+      console.error('Error in Game constructor:', error);
+      throw error;
+    }
 
     // Initialize input handler
     this.inputHandler = new InputHandler(this.player, this.camera);
