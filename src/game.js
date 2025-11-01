@@ -8,57 +8,89 @@ import { RelationshipManager } from './relationshipManager.js';
 
 export class Game {
   constructor(scene, camera, renderer) {
+    this.scene = scene;
+    this.camera = camera;
+    this.renderer = renderer;
+
     try {
-      this.scene = scene;
-      this.camera = camera;
-      this.renderer = renderer;
-
-      console.log('Creating world...');
-      // Create world with multiple houses
+      console.log('Step 1: Creating world...');
       this.world = new World(scene);
-      console.log('World created successfully');
+      console.log('✓ World created');
+    } catch (error) {
+      console.error('Failed at: Creating world', error);
+      throw new Error(`World creation failed: ${error.message}`);
+    }
 
-      console.log('Creating player character...');
-      // Create player character at first house
+    try {
+      console.log('Step 2: Creating player...');
       this.player = new Character();
       this.player.id = 'player';
       this.player.name = 'You';
       this.player.mesh.position.copy(this.world.getHousePosition(0));
       this.scene.add(this.player.mesh);
-      console.log('Player created successfully');
-
-      console.log('Creating NPCs...');
-      // Create NPCs
-      this.npcs = [];
-      this.createNPCs();
-      console.log('NPCs created successfully');
-
-      console.log('Getting objects...');
-      // Get all interactive objects from the world
-      this.objects = this.world.getAllObjects();
-      console.log(`Found ${this.objects.length} objects`);
-
-      console.log('Initializing managers...');
-      // Initialize managers
-      this.needsManager = new NeedsManager();
-      console.log('NeedsManager initialized');
-
-      this.timeSystem = new TimeSystem();
-      console.log('TimeSystem initialized');
-
-      this.relationshipManager = new RelationshipManager();
-      console.log('RelationshipManager initialized');
-
-      // Initialize relationship for player
-      this.relationshipManager.initializeCharacter('player');
-      console.log('Player relationship initialized');
+      console.log('✓ Player created');
     } catch (error) {
-      console.error('Error in Game constructor:', error);
-      throw error;
+      console.error('Failed at: Creating player', error);
+      throw new Error(`Player creation failed: ${error.message}`);
     }
 
-    // Initialize input handler
-    this.inputHandler = new InputHandler(this.player, this.camera);
+    try {
+      console.log('Step 3: Creating NPCs...');
+      this.npcs = [];
+      this.createNPCs();
+      console.log('✓ NPCs created');
+    } catch (error) {
+      console.error('Failed at: Creating NPCs', error);
+      throw new Error(`NPC creation failed: ${error.message}`);
+    }
+
+    try {
+      console.log('Step 4: Getting objects...');
+      this.objects = this.world.getAllObjects();
+      console.log(`✓ Found ${this.objects.length} objects`);
+    } catch (error) {
+      console.error('Failed at: Getting objects', error);
+      throw new Error(`Getting objects failed: ${error.message}`);
+    }
+
+    try {
+      console.log('Step 5: Creating NeedsManager...');
+      this.needsManager = new NeedsManager();
+      console.log('✓ NeedsManager created');
+    } catch (error) {
+      console.error('Failed at: Creating NeedsManager', error);
+      throw new Error(`NeedsManager creation failed: ${error.message}`);
+    }
+
+    try {
+      console.log('Step 6: Creating TimeSystem...');
+      this.timeSystem = new TimeSystem();
+      console.log('✓ TimeSystem created');
+    } catch (error) {
+      console.error('Failed at: Creating TimeSystem', error);
+      throw new Error(`TimeSystem creation failed: ${error.message}`);
+    }
+
+    try {
+      console.log('Step 7: Creating RelationshipManager...');
+      this.relationshipManager = new RelationshipManager();
+      console.log('✓ RelationshipManager created');
+
+      this.relationshipManager.initializeCharacter('player');
+      console.log('✓ Player relationship initialized');
+    } catch (error) {
+      console.error('Failed at: Creating RelationshipManager', error);
+      throw new Error(`RelationshipManager creation failed: ${error.message}`);
+    }
+
+    try {
+      console.log('Step 8: Creating InputHandler...');
+      this.inputHandler = new InputHandler(this.player, this.camera);
+      console.log('✓ InputHandler created');
+    } catch (error) {
+      console.error('Failed at: Creating InputHandler', error);
+      throw new Error(`InputHandler creation failed: ${error.message}`);
+    }
 
     // Setup interaction system
     this.setupInteractionSystem();
