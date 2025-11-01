@@ -35,17 +35,7 @@ export class Game {
     }
 
     try {
-      console.log('Step 3: Creating NPCs...');
-      this.npcs = [];
-      this.createNPCs();
-      console.log('✓ NPCs created');
-    } catch (error) {
-      console.error('Failed at: Creating NPCs', error);
-      throw new Error(`NPC creation failed: ${error.message}`);
-    }
-
-    try {
-      console.log('Step 4: Getting objects...');
+      console.log('Step 3: Getting objects...');
       this.objects = this.world.getAllObjects();
       console.log(`✓ Found ${this.objects.length} objects`);
     } catch (error) {
@@ -54,7 +44,7 @@ export class Game {
     }
 
     try {
-      console.log('Step 5: Creating NeedsManager...');
+      console.log('Step 4: Creating NeedsManager...');
       this.needsManager = new NeedsManager();
       console.log('✓ NeedsManager created');
     } catch (error) {
@@ -63,7 +53,7 @@ export class Game {
     }
 
     try {
-      console.log('Step 6: Creating TimeSystem...');
+      console.log('Step 5: Creating TimeSystem...');
       this.timeSystem = new TimeSystem();
       console.log('✓ TimeSystem created');
     } catch (error) {
@@ -72,7 +62,7 @@ export class Game {
     }
 
     try {
-      console.log('Step 7: Creating RelationshipManager...');
+      console.log('Step 6: Creating RelationshipManager...');
       this.relationshipManager = new RelationshipManager();
       console.log('✓ RelationshipManager created');
 
@@ -81,6 +71,16 @@ export class Game {
     } catch (error) {
       console.error('Failed at: Creating RelationshipManager', error);
       throw new Error(`RelationshipManager creation failed: ${error.message}`);
+    }
+
+    try {
+      console.log('Step 7: Creating NPCs...');
+      this.npcs = [];
+      this.createNPCs();
+      console.log('✓ NPCs created');
+    } catch (error) {
+      console.error('Failed at: Creating NPCs', error);
+      throw new Error(`NPC creation failed: ${error.message}`);
     }
 
     try {
